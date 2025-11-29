@@ -1,0 +1,40 @@
+name: CI/CD Pipeline for Automate_Ni Putu Alya Noviyanti.py
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.13'  # Pilih versi Python yang sesuai
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas # Pastikan Anda memiliki file requirements.txt yang mencakup dependensi
+
+    - name: Verify if CSV file exists
+      run: |
+        ls -l Eksperimen_SML_Alya/StudentsPerformance_raw.csv
+        
+    - name: Run Automate_Auric.py
+      run: |
+        python Eksperimen_SML_Alya/preprocessing/Automate_Alya.py  # Jalankan file Python Anda
+        
+    - name: Commit updated dataset
+      run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add Eksperimen_SML_Alya/preprocessing/StudentsPerformance_preprocessed
+          git commit -m "Update hasil preprocessing otomatis" || echo "Tidak ada perubahan"
+          git push

@@ -1,53 +1,47 @@
 name: Preprocessing Workflow
 
-# Trigger workflow
 on:
   push:
     branches:
       - main
-  workflow_dispatch:  # memungkinkan trigger manual di GitHub UI
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   preprocess:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout repository (pakai credential baru untuk push)
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
         persist-credentials: false
 
-    # Set up Python
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.13'
 
-    # Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pandas || echo "pandas already installed"
         pip install -r requirements.txt || echo "requirements.txt not found, skipping"
 
-    # Verify raw CSV exists
     - name: Verify if CSV file exists
-      run: |
-        ls -l StudentsPerformance_raw.csv
+      run: ls -l StudentsPerformance_raw.csv
 
-    # Run preprocessing script
     - name: Run Automate_Alya.py
-      run: |
-        python preprocessing/Automate_Alya.py
+      run: python preprocessing/Automate_Alya.py
 
-    # Commit & push preprocessed file
     - name: Commit and push preprocessed file
       run: |
         git config user.name "github-actions[bot]"
-        git config user.email "alya.noviyanti04@outlook.com"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
         git add preprocessing/StudentsPerformance_preprocessed.csv
-        # Commit hanya jika ada perubahan
         git diff-index --quiet HEAD || git commit -m "Update preprocessed dataset [skip ci]"
-        # Push pakai token agar tidak kena error 403
-        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lyaaaaa04/Eksperimen_SML_Ni-Putu-Alya-Noviyanti.git HEAD:main
+
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main

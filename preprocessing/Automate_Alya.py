@@ -55,7 +55,7 @@ def preprocess_and_classify_student_data(input_filepath, output_filepath):
 
 if __name__ == "__main__":
     # Tentukan path file input dan output
-    input_csv_path = "Eksperimen_SML_Alya/StudentsPerformance_raw.csv"
-    output_csv_path = "Eksperimen_SML_Alya/preprocessing/StudentsPerformance_preprocessed.csv"
+    input_csv_path = "StudentsPerformance_raw.csv"
+    output_csv_path = "preprocessing/StudentsPerformance_preprocessed.csv"
 
     preprocess_and_classify_student_data(input_csv_path, output_csv_path)

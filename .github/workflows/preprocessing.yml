@@ -1,0 +1,40 @@
+name: CI/CD Pipeline for Automate_Alya.py
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.13'  # Pilih versi Python yang sesuai
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pandas # Pastikan Anda memiliki file requirements.txt yang mencakup dependensi
+
+    - name: Verify if CSV file exists
+      run: |
+        ls -l StudentsPerformance_raw.csv
+        
+    - name: Run Automate_Alya.py
+      run: |
+        python preprocessing/Automate_Alya.py  # Jalankan file Python Anda
+        
+    - name: Commit updated dataset
+      run: |
+          git config --local user.email "alya.noviyanti04@outlook.com"
+          git config --local user.name "Alya Noviyanti"
+          git add preprocessing/StudentsPerformance_preprocessed
+          git commit -m "Update hasil preprocessing otomatis" || echo "Tidak ada perubahan"
+          git push

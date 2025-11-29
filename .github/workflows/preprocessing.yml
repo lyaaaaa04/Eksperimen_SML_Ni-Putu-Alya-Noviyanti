@@ -1,40 +1,43 @@
-name: CI/CD Pipeline for Automate_Alya.py
+name: Preprocessing Workflow
 
+# Trigger workflow
 on:
   push:
     branches:
-      - main 
+      - main
+  workflow_dispatch:  # memungkinkan trigger manual di GitHub UI
 
 jobs:
-  preprocessing:
+  preprocess:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    # 1. Checkout repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    # 2. Set up Python
+    - name: Setup Python
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.13'  # Pilih versi Python yang sesuai
+        python-version: '3.13'
 
+    # 3. Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pandas # Pastikan Anda memiliki file requirements.txt yang mencakup dependensi
+        pip install -r requirements.txt
 
-    - name: Verify if CSV file exists
+    # 4. Run preprocessing script
+    - name: Run preprocessing
       run: |
-        ls -l StudentsPerformance_raw.csv
-        
-    - name: Run Automate_Alya.py
+        python -c "from automate_Alya import save_preprocessed_csv; save_preprocessed_csv('StudentsPerformance_raw.csv','StudentsPerformance_preprocessed.csv')"
+
+    # 5. Optionally commit and push preprocessed file
+    - name: Commit preprocessed file
       run: |
-        python preprocessing/Automate_Alya.py  # Jalankan file Python Anda
-        
-    - name: Commit updated dataset
-      run: |
-          git config --local user.email "alya.noviyanti04@outlook.com"
-          git config --local user.name "Alya Noviyanti"
-          git add preprocessing/StudentsPerformance_preprocessed.csv
-          git commit -m "Update hasil preprocessing otomatis" || echo "Tidak ada perubahan"
-          git push
+        git config --local user.email "alya.noviyanti04@outlook.com"
+        git config --local user.name "Alya Noviyanti"
+        git add StudentsPerformance_preprocessed.csv
+        git commit -m "Update preprocessed dataset [skip ci]" || echo "No changes to commit"
+        git push

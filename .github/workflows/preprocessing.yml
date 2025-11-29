@@ -32,12 +32,9 @@ jobs:
         pip install -r requirements.txt || echo "requirements.txt not found, skipping"
 
     # Verify raw CSV exists
-    - name: Verify raw CSV file
+    - name: Verify if CSV file exists
       run: |
-        if [ ! -f preprocessing/StudentsPerformance_raw.csv ]; then
-          echo "Error: preprocessing/StudentsPerformance_raw.csv not found!"
-          exit 1
-        fi
+        ls -l StudentsPerformance_raw.csv
 
     # Run preprocessing script
     - name: Run Automate_Alya.py

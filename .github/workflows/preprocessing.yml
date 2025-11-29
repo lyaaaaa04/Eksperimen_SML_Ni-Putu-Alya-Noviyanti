@@ -31,7 +31,7 @@ jobs:
     # 4. Run preprocessing script
     - name: Run preprocessing
       run: |
-        python -c "from automate_Alya import save_preprocessed_csv; save_preprocessed_csv('StudentsPerformance_raw.csv','StudentsPerformance_preprocessed.csv')"
+        python -c "from Automate_Alya import save_preprocessed_csv; save_preprocessed_csv('StudentsPerformance_raw.csv','StudentsPerformance_preprocessed.csv')"
 
     # 5. Optionally commit and push preprocessed file
     - name: Commit preprocessed file

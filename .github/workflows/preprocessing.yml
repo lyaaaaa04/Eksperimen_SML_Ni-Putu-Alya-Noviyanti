@@ -42,12 +42,12 @@ jobs:
         python preprocessing/Automate_Alya.py
 
     # Commit & push preprocessed file
-    - name: Commit preprocessed file
+    - name: Commit and push preprocessed file
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "alya.noviyanti04@outlook.com"
         git add preprocessing/StudentsPerformance_preprocessed.csv
         # Commit hanya jika ada perubahan
         git diff-index --quiet HEAD || git commit -m "Update preprocessed dataset [skip ci]"
-        # Push pakai GITHUB_TOKEN untuk menghindari error 403
+        # Push pakai token agar tidak kena error 403
         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lyaaaaa04/Eksperimen_SML_Ni-Putu-Alya-Noviyanti.git HEAD:main

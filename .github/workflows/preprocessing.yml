@@ -12,37 +12,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout repository
+    # Checkout repository (pakai credential baru untuk push)
     - name: Checkout repository
       uses: actions/checkout@v3
+      with:
+        persist-credentials: false
 
-    # 2. Set up Python
+    # Set up Python
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.13'
 
-    # 3. Install dependencies
+    # Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pandas
+        pip install pandas || echo "pandas already installed"
         pip install -r requirements.txt || echo "requirements.txt not found, skipping"
 
-    # 4. Run preprocessing script
-    - name: Verify if CSV file exists
+    # Verify raw CSV exists
+    - name: Verify raw CSV file
       run: |
-        ls -l StudentsPerformance_raw.csv
-        
-    - name: Run Automate_Auric.py
+        if [ ! -f preprocessing/StudentsPerformance_raw.csv ]; then
+          echo "Error: preprocessing/StudentsPerformance_raw.csv not found!"
+          exit 1
+        fi
+
+    # Run preprocessing script
+    - name: Run Automate_Alya.py
       run: |
-        python preprocessing/Automate_Alya.py  # Jalankan file Python Anda
-        
-    # 5. Optionally commit and push preprocessed file
+        python preprocessing/Automate_Alya.py
+
+    # Commit & push preprocessed file
     - name: Commit preprocessed file
       run: |
-        git config --local user.email "alya.noviyanti04@outlook.com"
-        git config --local user.name "Alya Noviyanti"
+        git config user.name "github-actions[bot]"
+        git config user.email "alya.noviyanti04@outlook.com"
         git add preprocessing/StudentsPerformance_preprocessed.csv
-        git commit -m "Update preprocessed dataset [skip ci]" || echo "No changes to commit"
-        git push
+        # Commit hanya jika ada perubahan
+        git diff-index --quiet HEAD || git commit -m "Update preprocessed dataset [skip ci]"
+        # Push pakai GITHUB_TOKEN untuk menghindari error 403
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/lyaaaaa04/Eksperimen_SML_Ni-Putu-Alya-Noviyanti.git HEAD:main

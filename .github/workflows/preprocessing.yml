@@ -29,10 +29,14 @@ jobs:
         pip install -r requirements.txt || echo "requirements.txt not found, skipping"
 
     # 4. Run preprocessing script
-    - name: Run preprocessing
+    - name: Verify if CSV file exists
       run: |
-        python -c "from preprocessing/Automate_Alya import save_preprocessed_csv; save_preprocessed_csv('StudentsPerformance_raw.csv','preprocessing/StudentsPerformance_preprocessed.csv')"
-
+        ls -l StudentsPerformance_raw.csv
+        
+    - name: Run Automate_Auric.py
+      run: |
+        python preprocessing/Automate_Alya.py  # Jalankan file Python Anda
+        
     # 5. Optionally commit and push preprocessed file
     - name: Commit preprocessed file
       run: |

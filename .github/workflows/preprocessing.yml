@@ -35,6 +35,6 @@ jobs:
       run: |
           git config --local user.email "alya.noviyanti04@outlook.com"
           git config --local user.name "Alya Noviyanti"
-          git add preprocessing/StudentsPerformance_preprocessed
+          git add preprocessing/StudentsPerformance_preprocessed.csv
           git commit -m "Update hasil preprocessing otomatis" || echo "Tidak ada perubahan"
           git push

@@ -38,8 +38,8 @@ jobs:
 
     - name: Commit and push preprocessed file
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config user.name "lyaaaaa04"
+        git config user.email "alya.noviyanti04@gmail.com"
 
         git add preprocessing/StudentsPerformance_preprocessed.csv
         git diff-index --quiet HEAD || git commit -m "Update preprocessed dataset [skip ci]"
